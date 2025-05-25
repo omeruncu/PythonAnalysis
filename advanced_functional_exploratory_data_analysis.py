@@ -140,6 +140,9 @@ for col in num_cols:
 ## Capturing Variables and Generalizing Operations
 df.head()
 df.info()
+for col in df.columns:
+    if df[col].dtypes == "bool":
+        df[col] = df[col].astype(int)
 
 def grab_col_names(dataframe, categoric_threshold = 10, cardinality_threshold = 20):
     """
@@ -208,6 +211,30 @@ for col in num_cols:
 
 
 ## Analysis of Target Variables
+### Analysis of Target Variable with Categorical variables
+cat_summary(df,"survived")
+df.groupby("sex")["survived"].mean()
+
+def target_summary_with_cat(dataframe, target, categorical_col):
+    print(pd.DataFrame({"TARGET_MEAN" : dataframe.groupby(categorical_col)[target].mean()}), end = "\n\n\n")
+
+target_summary_with_cat(df, "survived", "pclass")
+
+for col in cat_cols:
+    target_summary_with_cat(df, "survived", col)
+
+### Analysis of Target Variable with Numerical variables
+df.groupby("survived")["age"].mean()
+
+df.groupby("survived").agg({"age" : "mean"})
+
+def target_summary_with_num(dataframe, target, numerical_col):
+    print(dataframe.groupby(target).agg({numerical_col : "mean"}), end = "\n\n\n")
+
+target_summary_with_num(df, "survived", "age")
+
+for col in num_cols:
+    target_summary_with_num(df, "survived", col)
 ## Analysis of Correlation
 
 
